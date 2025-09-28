@@ -6,6 +6,7 @@ import ModelViewer from "@/components/3d/ModelViewer";
 import { SAMPLES, type Sample } from "@/lib/samples";
 import Gallery from "@/components/home/Gallery";
 import { GALLERY_IMAGES } from "@/lib/gallery";
+import HeroCarousel from "@/components/home/HeroCarousel";
 
 export default function Index() {
   const [selected, setSelected] = useState<Sample | null>(null);
