@@ -2,6 +2,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 
 import Background from "@/components/design/Background";
+import WhatsAppPopup from "@/components/contact/WhatsAppPopup";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
