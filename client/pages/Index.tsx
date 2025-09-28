@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import SamplePreview from "@/components/home/SamplePreview";
 import ModelViewer from "@/components/3d/ModelViewer";
 import { SAMPLES, type Sample } from "@/lib/samples";
+import Gallery from "@/components/home/Gallery";
+import { GALLERY_IMAGES } from "@/lib/gallery";
 
 export default function Index() {
   const [selected, setSelected] = useState<Sample | null>(null);
