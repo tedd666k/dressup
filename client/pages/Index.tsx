@@ -20,8 +20,9 @@ export default function Index() {
 
   return (
     <div>
+      <HeroCarousel />
       <section className="relative overflow-hidden">
-        <div className="container mx-auto pt-14 pb-10 md:pt-20 md:pb-16">
+        <div className="container mx-auto pt-14 pb-10 md:pt-14 md:pb-16">
           <div className="grid gap-10 md:grid-cols-2 md:items-center">
             <div>
               <h1 className="text-4xl md:text-6xl font-serif tracking-tight leading-[1.1]">Meya Karis</h1>
