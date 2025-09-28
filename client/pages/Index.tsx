@@ -79,6 +79,9 @@ export default function Index() {
 
       {/* Gallery */}
       <Gallery images={GALLERY_IMAGES} />
+      <PromoGrid />
+      <Marquee />
+      <Newsletter />
 
       <section id="about" className="container mx-auto py-16 md:py-24">
         <div className="max-w-2xl">
