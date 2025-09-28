@@ -73,6 +73,9 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Gallery */}
+      <Gallery images={GALLERY_IMAGES} />
+
       <section id="about" className="container mx-auto py-16 md:py-24">
         <div className="max-w-2xl">
           <h2 className="text-2xl md:text-3xl font-serif">Elegance, Reimagined</h2>
