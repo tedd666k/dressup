@@ -41,6 +41,9 @@ export default function Admin() {
             <Input placeholder="pk_live_..." value={settings.paystackKey||""} onChange={(e)=>setSettings({ ...settings, paystackKey: e.target.value })} />
           </div>
         </div>
+        <div className="mt-4 grid gap-2 md:grid-cols-3">
+          <PasswordChanger />
+        </div>
         <p className="text-xs text-muted-foreground mt-2">Tip: For automated MoMo, connect Paystack/Flutterwave later. Until then, orders go to WhatsApp.</p>
       </section>
 
