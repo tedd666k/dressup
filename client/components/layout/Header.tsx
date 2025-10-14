@@ -7,8 +7,8 @@ export default function Header() {
         New drop — limited pieces available now
       </div>
       <div className="container mx-auto grid h-16 grid-cols-3 items-center">
-        <div className="hidden sm:flex items-center gap-3">
-          <a href="#collection" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Collection</a>
+        <div className="flex items-center gap-3">
+          <MainMenu />
         </div>
         <div className="flex items-center justify-center">
           <Link to="/" className="flex items-center gap-2">
