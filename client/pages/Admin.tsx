@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
+import PasswordChanger from "@/components/admin/PasswordChanger";
 
 export default function Admin() {
   const { state, setStock, setPrice, addProduct, addCollection, removeCollection, renameCollection, addCollectionImage, removeCollectionImage } = useShop();
