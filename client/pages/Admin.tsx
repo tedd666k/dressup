@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import PasswordChanger from "@/components/admin/PasswordChanger";
+import PagesEditor from "@/components/admin/PagesEditor";
 
 export default function Admin() {
   const { state, setStock, setPrice, addProduct, addCollection, removeCollection, renameCollection, addCollectionImage, removeCollectionImage } = useShop();
@@ -46,6 +47,11 @@ export default function Admin() {
           <PasswordChanger />
         </div>
         <p className="text-xs text-muted-foreground mt-2">Tip: For automated MoMo, connect Paystack/Flutterwave later. Until then, orders go to WhatsApp.</p>
+      </section>
+
+      <section className="rounded-xl border p-4 mb-8">
+        <h2 className="font-medium mb-3">Pages</h2>
+        <PagesEditor />
       </section>
 
       <section className="rounded-xl border p-4 mb-8">
