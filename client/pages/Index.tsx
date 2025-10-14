@@ -1,27 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import SamplePreview from "@/components/home/SamplePreview";
-import ModelViewer from "@/components/3d/ModelViewer";
-import { SAMPLES, type Sample } from "@/lib/samples";
 import Gallery from "@/components/home/Gallery";
 import { GALLERY_IMAGES } from "@/lib/gallery";
 import HeroCarousel from "@/components/home/HeroCarousel";
 import PromoGrid from "@/components/home/PromoGrid";
 import Marquee from "@/components/home/Marquee";
 import Newsletter from "@/components/home/Newsletter";
+import SimpleProductGrid from "@/components/home/SimpleProductGrid";
 
 export default function Index() {
-  const [selected, setSelected] = useState<Sample | null>(null);
-  const [highlight, setHighlight] = useState(0);
-
-  useEffect(() => {
-    const id = setInterval(() => setHighlight((h) => (h + 1) % samples.length), 5000);
-    return () => clearInterval(id);
-  }, []);
-
-  const samples = useMemo(() => SAMPLES, []);
-
   return (
     <div>
       <HeroCarousel />
@@ -31,7 +18,7 @@ export default function Index() {
             <div>
               <h1 className="text-4xl md:text-6xl font-serif tracking-tight leading-[1.1]">Meya Karis</h1>
               <p className="mt-4 text-muted-foreground max-w-prose">
-                Contemporary couture with timeless silhouettes. Explore crafted garments in an immersive 3D view.
+                Contemporary couture with timeless silhouettes. A refined, minimalist presentation.
               </p>
               <div className="mt-6 flex gap-3">
                 <a href="#collection">
@@ -43,38 +30,7 @@ export default function Index() {
               </div>
             </div>
             <div className="relative">
-              <div className="grid grid-cols-2 gap-4" id="collection">
-                {samples.map((s, i) => (
-                  <Dialog key={s.id}>
-                    <DialogTrigger asChild>
-                      <button
-                        onClick={() => setSelected(s)}
-                        className={`group text-left rounded-xl p-3 transition-all border hover:shadow-lg ${
-                          i === highlight ? "ring-2 ring-accent/70" : ""
-                        }`}
-                        aria-label={`Open ${s.name}`}
-                      >
-                        <SamplePreview color={s.color} accent={s.accent} variant={s.variant} bg={s.bg} />
-                        <div className="mt-3 flex items-center justify-between">
-                          <div>
-                            <p className="font-medium">{s.name}</p>
-                            <p className="text-xs text-muted-foreground">Interactive 3D preview</p>
-                          </div>
-                          <span className="text-xs px-2 py-1 rounded-full border bg-muted">3D</span>
-                        </div>
-                      </button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-3xl p-0">
-                      {selected && (
-                        <div className="w-full">
-                          <div className="px-4 pt-4"><h3 className="text-lg font-medium">{selected.name}</h3></div>
-                          <ModelViewer color={selected.color} accent={selected.accent} variant={selected.variant} bg={selected.bg} />
-                        </div>
-                      )}
-                    </DialogContent>
-                  </Dialog>
-                ))}
-              </div>
+              <SimpleProductGrid />
             </div>
           </div>
         </div>
