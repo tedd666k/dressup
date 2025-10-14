@@ -18,7 +18,8 @@ function normalize(state: ShopState): ShopState {
 export function useShop() {
   const [state, setState] = useState<ShopState>(() => {
     const s = storage.get(KEY, { products: DEFAULT_PRODUCTS, cart: [], collections: [] } as ShopState);
-    return { products: s.products ?? DEFAULT_PRODUCTS, cart: s.cart ?? [], collections: s.collections ?? [] };
+    const products = (s.products ?? DEFAULT_PRODUCTS).slice(0, 4);
+    return { products, cart: s.cart ?? [], collections: s.collections ?? [] };
   });
 
   useEffect(() => storage.set(KEY, normalize(state)), [state]);
@@ -42,6 +43,7 @@ export function useShop() {
   const setStock = (id: string, stock: number) => setState((s) => ({ ...s, products: s.products.map((p) => (p.id === id ? { ...p, stock } : p)) }));
   const setPrice = (id: string, price: number) => setState((s) => ({ ...s, products: s.products.map((p) => (p.id === id ? { ...p, price } : p)) }));
   const addProduct = (p: Product) => setState((s) => ({ ...s, products: [...s.products, p] }));
+  const deleteProduct = (id: string) => setState((s)=>({ ...s, products: s.products.filter(p=>p.id!==id), cart: s.cart.filter(l=>l.id!==id) }));
 
   const clearCart = () => setState((s) => ({ ...s, cart: [] }));
 
@@ -51,7 +53,7 @@ export function useShop() {
   const addCollectionImage = (id: string, url: string) => setState((s)=>({ ...s, collections: s.collections.map(c=>c.id===id?{...c, images:[...c.images, url]}:c) }));
   const removeCollectionImage = (id: string, url: string) => setState((s)=>({ ...s, collections: s.collections.map(c=>c.id===id?{...c, images:c.images.filter(u=>u!==url)}:c) }));
 
-  return { state, productsMap, addToCart, removeFromCart, setStock, setPrice, addProduct, clearCart, addCollection, removeCollection, renameCollection, addCollectionImage, removeCollectionImage };
+  return { state, productsMap, addToCart, removeFromCart, setStock, setPrice, addProduct, deleteProduct, clearCart, addCollection, removeCollection, renameCollection, addCollectionImage, removeCollectionImage };
 }
 
 export function useUser() {
