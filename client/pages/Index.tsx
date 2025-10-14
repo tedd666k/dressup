@@ -35,6 +35,8 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Collections (auto from Admin) */}
+      <HomeCollections />
       {/* Gallery */}
       <Gallery images={GALLERY_IMAGES} />
       <PromoGrid />
