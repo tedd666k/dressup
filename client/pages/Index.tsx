@@ -4,7 +4,6 @@ import Gallery from "@/components/home/Gallery";
 import { GALLERY_IMAGES } from "@/lib/gallery";
 import HeroCarousel from "@/components/home/HeroCarousel";
 import PromoGrid from "@/components/home/PromoGrid";
-import Marquee from "@/components/home/Marquee";
 import Newsletter from "@/components/home/Newsletter";
 import SimpleProductGrid from "@/components/home/SimpleProductGrid";
 
@@ -39,7 +38,6 @@ export default function Index() {
       {/* Gallery */}
       <Gallery images={GALLERY_IMAGES} />
       <PromoGrid />
-      <Marquee />
       <Newsletter />
 
       <section id="about" className="container mx-auto py-16 md:py-24">
