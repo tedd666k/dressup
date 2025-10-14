@@ -12,7 +12,7 @@ export default function MainMenu() {
       </SheetTrigger>
       <SheetContent side="left" className="w-full sm:max-w-xs">
         <nav className="mt-8 grid gap-3 text-lg">
-          <Link to="/shop" className="hover:underline">Collections</Link>
+          <a href="#collections" className="hover:underline">Collections</a>
           <a href="#gallery" className="hover:underline">Gallery</a>
           <a href="#about" className="hover:underline">About</a>
           <Link to="/account" className="hover:underline">Account</Link>
