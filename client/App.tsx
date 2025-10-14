@@ -13,6 +13,7 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Account from "./pages/Account";
 import Admin from "./pages/Admin";
+import AdminGate from "@/components/auth/AdminGate";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
