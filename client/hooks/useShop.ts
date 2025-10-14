@@ -3,18 +3,23 @@ import { storage } from "@/lib/storage";
 import { DEFAULT_PRODUCTS, type Product } from "@/lib/products";
 
 export type CartLine = { id: string; qty: number };
-export type ShopState = { products: Product[]; cart: CartLine[] };
+export type Collection = { id: string; name: string; images: string[]; featured?: boolean };
+export type ShopState = { products: Product[]; cart: CartLine[]; collections: Collection[] };
 const KEY = "meya.shop";
 
 function normalize(state: ShopState): ShopState {
   return {
     products: state.products,
     cart: state.cart.filter((l) => l.qty > 0),
+    collections: state.collections || [],
   };
 }
 
 export function useShop() {
-  const [state, setState] = useState<ShopState>(() => storage.get(KEY, { products: DEFAULT_PRODUCTS, cart: [] }));
+  const [state, setState] = useState<ShopState>(() => {
+    const s = storage.get(KEY, { products: DEFAULT_PRODUCTS, cart: [], collections: [] } as ShopState);
+    return { products: s.products ?? DEFAULT_PRODUCTS, cart: s.cart ?? [], collections: s.collections ?? [] };
+  });
 
   useEffect(() => storage.set(KEY, normalize(state)), [state]);
 
@@ -40,7 +45,13 @@ export function useShop() {
 
   const clearCart = () => setState((s) => ({ ...s, cart: [] }));
 
-  return { state, productsMap, addToCart, removeFromCart, setStock, setPrice, addProduct, clearCart };
+  const addCollection = (name: string) => setState((s) => ({ ...s, collections: [...s.collections, { id: `c_${Date.now()}`, name, images: [] }] }));
+  const removeCollection = (id: string) => setState((s) => ({ ...s, collections: s.collections.filter((c) => c.id !== id) }));
+  const renameCollection = (id: string, name: string) => setState((s)=>({ ...s, collections: s.collections.map(c=>c.id===id?{...c, name}:c) }));
+  const addCollectionImage = (id: string, url: string) => setState((s)=>({ ...s, collections: s.collections.map(c=>c.id===id?{...c, images:[...c.images, url]}:c) }));
+  const removeCollectionImage = (id: string, url: string) => setState((s)=>({ ...s, collections: s.collections.map(c=>c.id===id?{...c, images:c.images.filter(u=>u!==url)}:c) }));
+
+  return { state, productsMap, addToCart, removeFromCart, setStock, setPrice, addProduct, clearCart, addCollection, removeCollection, renameCollection, addCollectionImage, removeCollectionImage };
 }
 
 export function useUser() {
