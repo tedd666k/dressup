@@ -5,6 +5,4 @@ export const DEFAULT_PRODUCTS: Product[] = [
   { id: "mk-mermaid", name: "Mermaid Noir", price: 990, stock: 3, image: "https://images.pexels.com/photos/32486448/pexels-photo-32486448.jpeg" },
   { id: "mk-coat", name: "Trench Sculpt", price: 720, stock: 8, image: "https://images.pexels.com/photos/28283487/pexels-photo-28283487.jpeg" },
   { id: "mk-gown", name: "Evening Gown", price: 1250, stock: 2, image: "https://images.pexels.com/photos/32100313/pexels-photo-32100313.jpeg" },
-  { id: "mk-metallic", name: "Metallic Sheen", price: 680, stock: 4, image: "https://images.pexels.com/photos/13364874/pexels-photo-13364874.jpeg" },
-  { id: "mk-red", name: "Crimson Muse", price: 1100, stock: 5, image: "https://images.pexels.com/photos/32486448/pexels-photo-32486448.jpeg" },
 ];
