@@ -4,13 +4,16 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 export default function Admin() {
-  const { state, setStock, setPrice, addProduct } = useShop();
+  const { state, setStock, setPrice, addProduct, addCollection, removeCollection, renameCollection, addCollectionImage, removeCollectionImage } = useShop();
   const { settings, setSettings } = useSettings();
 
   const [newName, setNewName] = useState("");
   const [newPrice, setNewPrice] = useState(0);
   const [newStock, setNewStock] = useState(0);
   const [newImage, setNewImage] = useState("");
+
+  const [colName, setColName] = useState("");
+  const [colImg, setColImg] = useState("");
 
   return (
     <div className="container mx-auto py-10">
@@ -38,6 +41,36 @@ export default function Admin() {
           </div>
         </div>
         <p className="text-xs text-muted-foreground mt-2">Tip: For automated MoMo, connect Paystack/Flutterwave later. Until then, orders go to WhatsApp.</p>
+      </section>
+
+      <section className="rounded-xl border p-4 mb-8">
+        <h2 className="font-medium mb-3">Collections</h2>
+        <div className="grid md:grid-cols-[1fr_auto] gap-2">
+          <Input placeholder="Collection name" value={colName} onChange={(e)=>setColName(e.target.value)} />
+          <Button onClick={()=>{ if(!colName) return; addCollection(colName); setColName(""); }}>Add Collection</Button>
+        </div>
+        <div className="mt-4 space-y-4">
+          {state.collections.map((c)=> (
+            <div key={c.id} className="border rounded-lg p-3">
+              <div className="flex items-center justify-between gap-3">
+                <Input value={c.name} onChange={(e)=>renameCollection(c.id, e.target.value)} />
+                <Button variant="outline" onClick={()=>removeCollection(c.id)}>Delete</Button>
+              </div>
+              <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2">
+                {c.images.map((u)=>(
+                  <div key={u} className="relative group">
+                    <img src={`${u}?auto=compress&cs=tinysrgb&w=400`} className="aspect-square w-full object-cover rounded" />
+                    <button className="absolute top-2 right-2 text-xs bg-black/60 text-white rounded px-2 py-1 opacity-0 group-hover:opacity-100" onClick={()=>removeCollectionImage(c.id, u)}>Remove</button>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 grid md:grid-cols-[1fr_auto] gap-2">
+                <Input placeholder="Image URL" value={colImg} onChange={(e)=>setColImg(e.target.value)} />
+                <Button onClick={()=>{ if(!colImg) return; addCollectionImage(c.id, colImg); setColImg(""); }}>Add Image</Button>
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section className="rounded-xl border p-4">
