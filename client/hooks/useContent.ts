@@ -14,7 +14,9 @@ const DEFAULTS: PagesContent = {
 };
 
 export function useContent() {
-  const [content, setContent] = useState<PagesContent>(() => storage.get(KEY, DEFAULTS));
+  const [content, setContent] = useState<PagesContent>(() =>
+    storage.get(KEY, DEFAULTS),
+  );
   useEffect(() => storage.set(KEY, content), [content]);
   return { content, setContent };
 }
