@@ -2,6 +2,7 @@ import { useShop, useSettings } from "@/hooks/useShop";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 export default function Admin() {
   const { state, setStock, setPrice, addProduct, addCollection, removeCollection, renameCollection, addCollectionImage, removeCollectionImage } = useShop();
