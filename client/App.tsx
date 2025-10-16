@@ -12,6 +12,7 @@ import Shop from "./pages/Shop";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import ProductCheckout from "./pages/ProductCheckout";
+import CollectionCheckout from "./pages/CollectionCheckout";
 import Account from "./pages/Account";
 import Admin from "./pages/Admin";
 import AdminGate from "@/components/auth/AdminGate";
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/product/:productId" element={<ProductCheckout />} />
+            <Route path="/collection/:collectionId" element={<CollectionCheckout />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/account" element={<Account />} />
