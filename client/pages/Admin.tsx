@@ -26,6 +26,8 @@ export default function Admin() {
   const [newPrice, setNewPrice] = useState(0);
   const [newStock, setNewStock] = useState(0);
   const [newImage, setNewImage] = useState("");
+  const [newCategory, setNewCategory] = useState<"dresses" | "skirts">("dresses");
+  const [newSizes, setNewSizes] = useState<string[]>(["XS", "S", "M", "L", "XL"]);
 
   const [colName, setColName] = useState("");
   const [colImg, setColImg] = useState("");
