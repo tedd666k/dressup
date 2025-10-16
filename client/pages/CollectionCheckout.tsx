@@ -8,7 +8,7 @@ import { buildWhatsAppOrder } from "@/lib/wa";
 export default function CollectionCheckout() {
   const { collectionId } = useParams();
   const navigate = useNavigate();
-  const { state, settings: shopSettings } = useShop();
+  const { state } = useShop();
   const { settings } = useSettings();
 
   const collection = state.collections.find((c) => c.id === collectionId);
