@@ -12,6 +12,7 @@ export default function Admin() {
     setStock,
     setPrice,
     addProduct,
+    deleteProduct,
     addCollection,
     removeCollection,
     renameCollection,
@@ -163,7 +164,7 @@ export default function Admin() {
           {state.products.map((p) => (
             <div
               key={p.id}
-              className="grid grid-cols-1 md:grid-cols-[80px_1fr_160px_160px] gap-3 items-center border rounded-lg p-3"
+              className="grid grid-cols-1 md:grid-cols-[80px_1fr_160px_160px_auto] gap-3 items-center border rounded-lg p-3"
             >
               <img
                 src={`${p.image}?auto=compress&cs=tinysrgb&w=160`}
@@ -192,6 +193,13 @@ export default function Admin() {
                   }
                 />
               </div>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => deleteProduct(p.id)}
+              >
+                Delete
+              </Button>
             </div>
           ))}
         </div>
