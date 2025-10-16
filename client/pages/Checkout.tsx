@@ -98,11 +98,17 @@ function PaystackPayment({
   productsMap: Map<string, any>;
   onSuccess: () => void;
 }) {
+  const { settings } = useSettings();
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
 
   const handlePaystackPayment = () => {
+    if (!email.trim()) {
+      alert("Please enter your email address");
+      return;
+    }
+
     setLoading(true);
-    // Paystack expects amount in pesewas (Ghana Cedis × 100)
     const amount = Math.round(total * 100);
 
     const itemsText = items
@@ -112,22 +118,48 @@ function PaystackPayment({
       })
       .join(", ");
 
-    const paystackUrl = `https://checkout.paystack.com/close`;
+    const handler = (window as any).PaystackPop.setup({
+      key: settings.paystackKey,
+      email: email,
+      amount: amount,
+      currency: "GHS",
+      ref: `meya_${Date.now()}`,
+      onClose: () => {
+        setLoading(false);
+        alert("Payment window closed.");
+      },
+      onSuccess: (response: any) => {
+        setLoading(false);
+        alert(`Payment successful! Reference: ${response.reference}\n\nItems: ${itemsText}`);
+        onSuccess();
+      },
+    });
 
-    // Note: For production, you should initialize Paystack payment through your backend
-    // This is a simplified client-side implementation
-    alert(`Paystack payment for ¢${total.toFixed(2)} for items: ${itemsText}\n\nPlease configure Paystack integration in your backend for production use.`);
-    setLoading(false);
+    handler.openIframe();
   };
 
   return (
-    <div className="mt-6 flex flex-col sm:flex-row gap-3">
-      <Button
-        disabled={loading}
-        onClick={handlePaystackPayment}
-      >
-        {loading ? "Processing..." : "Pay with Paystack"}
-      </Button>
+    <div className="mt-6 rounded-xl border p-4">
+      <h3 className="font-medium mb-3">Pay with Paystack</h3>
+      <div className="space-y-3">
+        <div>
+          <label className="text-sm font-medium">Email Address</label>
+          <Input
+            type="email"
+            placeholder="your@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={loading}
+          />
+        </div>
+        <Button
+          className="w-full"
+          disabled={loading || !email}
+          onClick={handlePaystackPayment}
+        >
+          {loading ? "Processing..." : `Pay ¢${total.toFixed(2)} with Paystack`}
+        </Button>
+      </div>
     </div>
   );
 }
