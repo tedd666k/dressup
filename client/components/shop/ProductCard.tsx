@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Product } from "@/lib/products";
+import { Link } from "react-router-dom";
 
 export default function ProductCard({ p, onAdd }: { p: Product; onAdd: () => void }) {
   const soldOut = p.stock <= 0;
@@ -13,7 +14,12 @@ export default function ProductCard({ p, onAdd }: { p: Product; onAdd: () => voi
         </div>
         <div className="text-right">
           <p className="text-sm">¢{p.price.toFixed(2)}</p>
-          <Button size="sm" disabled={soldOut} onClick={onAdd} className="mt-2">Add</Button>
+          <div className="flex flex-col gap-1 mt-2">
+            <Button size="sm" disabled={soldOut} onClick={onAdd}>Add</Button>
+            <Link to={`/product/${p.id}`}>
+              <Button size="sm" variant="outline" className="w-full">Buy Now</Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
