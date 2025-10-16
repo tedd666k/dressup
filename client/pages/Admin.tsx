@@ -13,6 +13,7 @@ export default function Admin() {
     setPrice,
     addProduct,
     deleteProduct,
+    updateProduct,
     addCollection,
     removeCollection,
     renameCollection,
