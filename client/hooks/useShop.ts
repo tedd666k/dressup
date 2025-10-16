@@ -54,7 +54,7 @@ export function useShop() {
   const addCollectionImage = (id: string, url: string) => setState((s)=>({ ...s, collections: s.collections.map(c=>c.id===id?{...c, images:[...c.images, url]}:c) }));
   const removeCollectionImage = (id: string, url: string) => setState((s)=>({ ...s, collections: s.collections.map(c=>c.id===id?{...c, images:c.images.filter(u=>u!==url)}:c) }));
 
-  return { state, productsMap, addToCart, removeFromCart, setStock, setPrice, addProduct, deleteProduct, clearCart, addCollection, removeCollection, renameCollection, addCollectionImage, removeCollectionImage };
+  return { state, productsMap, addToCart, removeFromCart, setStock, setPrice, addProduct, deleteProduct, updateProduct, clearCart, addCollection, removeCollection, renameCollection, addCollectionImage, removeCollectionImage };
 }
 
 export function useUser() {
