@@ -161,60 +161,89 @@ export default function Admin() {
         </div>
       </section>
 
-      <section className="rounded-xl border p-4">
-        <h2 className="font-medium mb-3">Inventory</h2>
+      <section className="rounded-xl border p-4 mb-8">
+        <h2 className="font-medium mb-3">Shop Items</h2>
         <div className="space-y-3">
           {state.products.map((p) => (
             <div
               key={p.id}
-              className="grid grid-cols-1 md:grid-cols-[80px_1fr_160px_160px_auto] gap-3 items-center border rounded-lg p-3"
+              className="border rounded-lg p-3 space-y-3"
             >
-              <img
-                src={`${p.image}?auto=compress&cs=tinysrgb&w=160`}
-                className="h-16 w-12 object-cover rounded"
-              />
-              <div>
-                <p className="font-medium">{p.name}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <label className="text-sm text-muted-foreground">Price</label>
-                <Input
-                  type="number"
-                  value={p.price}
-                  onChange={(e) =>
-                    setPrice(p.id, parseFloat(e.target.value) || 0)
-                  }
+              <div className="grid grid-cols-1 md:grid-cols-[80px_1fr_auto] gap-3 items-start">
+                <img
+                  src={`${p.image}?auto=compress&cs=tinysrgb&w=160`}
+                  className="h-16 w-12 object-cover rounded"
                 />
+                <div>
+                  <p className="font-medium">{p.name}</p>
+                  <p className="text-xs text-muted-foreground capitalize">{p.category}</p>
+                  <p className="text-xs text-muted-foreground">Sizes: {p.sizes.join(", ")}</p>
+                </div>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => deleteProduct(p.id)}
+                >
+                  Delete
+                </Button>
               </div>
-              <div className="flex items-center gap-2">
-                <label className="text-sm text-muted-foreground">Stock</label>
-                <Input
-                  type="number"
-                  value={p.stock}
-                  onChange={(e) =>
-                    setStock(p.id, parseInt(e.target.value) || 0)
-                  }
-                />
+              <div className="grid md:grid-cols-3 gap-3 bg-muted/30 p-3 rounded">
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-muted-foreground">Price</label>
+                  <Input
+                    type="number"
+                    value={p.price}
+                    onChange={(e) =>
+                      setPrice(p.id, parseFloat(e.target.value) || 0)
+                    }
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-muted-foreground">Stock</label>
+                  <Input
+                    type="number"
+                    value={p.stock}
+                    onChange={(e) =>
+                      setStock(p.id, parseInt(e.target.value) || 0)
+                    }
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-muted-foreground">Category</label>
+                  <select
+                    className="w-full h-10 border rounded-md bg-background px-3"
+                    value={p.category}
+                    onChange={(e) =>
+                      updateProduct(p.id, { category: e.target.value as "dresses" | "skirts" })
+                    }
+                  >
+                    <option value="dresses">Dresses</option>
+                    <option value="skirts">Skirts</option>
+                  </select>
+                </div>
               </div>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => deleteProduct(p.id)}
-              >
-                Delete
-              </Button>
             </div>
           ))}
         </div>
 
         <div className="mt-6">
-          <h3 className="font-medium mb-2">Add New Product</h3>
-          <div className="grid md:grid-cols-4 gap-2">
+          <h3 className="font-medium mb-3">Add New Shop Item</h3>
+          <div className="grid md:grid-cols-2 gap-3 mb-3">
             <Input
-              placeholder="Name"
+              placeholder="Product Name"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
             />
+            <select
+              className="h-10 border rounded-md bg-background px-3"
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value as "dresses" | "skirts")}
+            >
+              <option value="dresses">Dresses</option>
+              <option value="skirts">Skirts</option>
+            </select>
+          </div>
+          <div className="grid md:grid-cols-3 gap-2 mb-3">
             <Input
               type="number"
               placeholder="Price"
@@ -233,24 +262,55 @@ export default function Admin() {
               onChange={(e) => setNewImage(e.target.value)}
             />
           </div>
+          <div className="mb-3">
+            <label className="text-sm font-medium">Available Sizes</label>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
+                <button
+                  key={size}
+                  onClick={() => {
+                    if (newSizes.includes(size)) {
+                      setNewSizes(newSizes.filter((s) => s !== size));
+                    } else {
+                      setNewSizes([...newSizes, size]);
+                    }
+                  }}
+                  className={`px-3 py-2 rounded text-sm font-medium border transition-colors ${
+                    newSizes.includes(size)
+                      ? "bg-black text-white border-black"
+                      : "bg-background text-foreground border-gray-300 hover:border-black"
+                  }`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
           <Button
-            className="mt-3"
+            className="w-full"
             onClick={() => {
-              if (!newName || !newImage) return;
+              if (!newName || !newImage || newSizes.length === 0) {
+                alert("Please fill in all fields and select at least one size");
+                return;
+              }
               addProduct({
                 id: `p_${Date.now()}`,
                 name: newName,
                 price: newPrice,
                 stock: newStock,
                 image: newImage,
+                category: newCategory,
+                sizes: newSizes,
               });
               setNewName("");
               setNewPrice(0);
               setNewStock(0);
               setNewImage("");
+              setNewCategory("dresses");
+              setNewSizes(["XS", "S", "M", "L", "XL"]);
             }}
           >
-            Add Product
+            Add Shop Item
           </Button>
         </div>
       </section>
