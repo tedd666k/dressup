@@ -87,6 +87,51 @@ export default function Checkout() {
   );
 }
 
+function PaystackPayment({
+  total,
+  items,
+  productsMap,
+  onSuccess,
+}: {
+  total: number;
+  items: any[];
+  productsMap: Map<string, any>;
+  onSuccess: () => void;
+}) {
+  const [loading, setLoading] = useState(false);
+
+  const handlePaystackPayment = () => {
+    setLoading(true);
+    // Paystack expects amount in pesewas (Ghana Cedis × 100)
+    const amount = Math.round(total * 100);
+
+    const itemsText = items
+      .map((l) => {
+        const p = productsMap.get(l.id)!;
+        return `${p.name} x${l.qty}`;
+      })
+      .join(", ");
+
+    const paystackUrl = `https://checkout.paystack.com/close`;
+
+    // Note: For production, you should initialize Paystack payment through your backend
+    // This is a simplified client-side implementation
+    alert(`Paystack payment for ¢${total.toFixed(2)} for items: ${itemsText}\n\nPlease configure Paystack integration in your backend for production use.`);
+    setLoading(false);
+  };
+
+  return (
+    <div className="mt-6 flex flex-col sm:flex-row gap-3">
+      <Button
+        disabled={loading}
+        onClick={handlePaystackPayment}
+      >
+        {loading ? "Processing..." : "Pay with Paystack"}
+      </Button>
+    </div>
+  );
+}
+
 function ManualMomo({
   orderText,
   ownerPhone,
@@ -94,8 +139,8 @@ function ManualMomo({
   orderText: string;
   ownerPhone?: string;
 }) {
-  const [phone, setPhone] = React.useState("");
-  const [network, setNetwork] = React.useState("MTN");
+  const [phone, setPhone] = useState("");
+  const [network, setNetwork] = useState("MTN");
   const link = buildWhatsAppOrder({
     phone: ownerPhone,
     message: `${orderText}MoMo request — Network: ${network}, Customer MoMo: ${phone}`,
@@ -104,8 +149,7 @@ function ManualMomo({
     <div className="mt-6 rounded-xl border p-4">
       <h3 className="font-medium mb-3">Mobile Money (Manual)</h3>
       <div className="grid md:grid-cols-3 gap-3">
-        <input
-          className="h-10 rounded-md border bg-background px-3"
+        <Input
           placeholder="Customer MoMo Number"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
