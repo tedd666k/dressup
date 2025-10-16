@@ -44,6 +44,7 @@ export function useShop() {
   const setPrice = (id: string, price: number) => setState((s) => ({ ...s, products: s.products.map((p) => (p.id === id ? { ...p, price } : p)) }));
   const addProduct = (p: Product) => setState((s) => ({ ...s, products: [...s.products, p] }));
   const deleteProduct = (id: string) => setState((s)=>({ ...s, products: s.products.filter(p=>p.id!==id), cart: s.cart.filter(l=>l.id!==id) }));
+  const updateProduct = (id: string, updates: Partial<Product>) => setState((s) => ({ ...s, products: s.products.map((p) => (p.id === id ? { ...p, ...updates } : p)) }));
 
   const clearCart = () => setState((s) => ({ ...s, cart: [] }));
 
