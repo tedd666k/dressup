@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useShop, useUser, useSettings } from "@/hooks/useShop";
 import { buildWhatsAppOrder } from "@/lib/wa";
 
@@ -63,7 +64,9 @@ export default function Checkout() {
           <span>¢{total.toFixed(2)}</span>
         </div>
       </div>
-      {settings.momoProvider === "manual" ? (
+      {settings.momoProvider === "paystack" && settings.paystackKey ? (
+        <PaystackPayment total={total} items={state.cart} productsMap={productsMap} onSuccess={handlePlaceOrder} />
+      ) : settings.momoProvider === "manual" ? (
         <ManualMomo orderText={orderText} ownerPhone={settings.ownerPhone} />
       ) : (
         <div className="mt-6 flex flex-col sm:flex-row gap-3">
@@ -71,7 +74,7 @@ export default function Checkout() {
             Place Order via WhatsApp
           </Button>
           <Button variant="outline" disabled className="cursor-not-allowed">
-            Pay with Mobile Money (connect {settings.momoProvider})
+            Pay with Mobile Money (configure in admin)
           </Button>
         </div>
       )}
