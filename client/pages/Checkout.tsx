@@ -1,8 +1,7 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useShop, useUser, useSettings } from "@/hooks/useShop";
-import { buildWhatsAppOrder } from "@/lib/wa";
+import { useShop, useUser } from "@/hooks/useShop";
 
 export default function Checkout() {
   const { state, productsMap, clearCart } = useShop();
