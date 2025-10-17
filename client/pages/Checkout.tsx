@@ -64,20 +64,7 @@ export default function Checkout() {
           <span>¢{total.toFixed(2)}</span>
         </div>
       </div>
-      {settings.momoProvider === "paystack" && settings.paystackKey ? (
-        <PaystackPayment total={total} items={state.cart} productsMap={productsMap} onSuccess={handlePlaceOrder} />
-      ) : settings.momoProvider === "manual" ? (
-        <ManualMomo orderText={orderText} ownerPhone={settings.ownerPhone} />
-      ) : (
-        <div className="mt-6 flex flex-col sm:flex-row gap-3">
-          <Button disabled={!waLink} onClick={handlePlaceOrder}>
-            Place Order via WhatsApp
-          </Button>
-          <Button variant="outline" disabled className="cursor-not-allowed">
-            Pay with Mobile Money (configure in admin)
-          </Button>
-        </div>
-      )}
+      <PaystackPayment total={total} items={state.cart} productsMap={productsMap} onSuccess={handlePlaceOrder} />
       {!settings.ownerPhone && (
         <p className="mt-3 text-xs text-muted-foreground">
           Set owner WhatsApp in Admin → Settings to enable WhatsApp ordering.
