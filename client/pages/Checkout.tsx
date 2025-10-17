@@ -85,18 +85,16 @@ function PaystackPayment({
   productsMap: Map<string, any>;
   onSuccess: () => void;
 }) {
-  const { settings } = useSettings();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
 
-  const handlePaystackPayment = () => {
+  const handlePaystackPayment = async () => {
     if (!email.trim()) {
       alert("Please enter your email address");
       return;
     }
 
     setLoading(true);
-    const amount = Math.round(total * 100);
 
     const itemsText = items
       .map((l) => {
@@ -105,29 +103,69 @@ function PaystackPayment({
       })
       .join(", ");
 
-    const handler = (window as any).PaystackPop.setup({
-      key: settings.paystackKey,
-      email: email,
-      amount: amount,
-      currency: "GHS",
-      ref: `meya_${Date.now()}`,
-      onClose: () => {
-        setLoading(false);
-        alert("Payment window closed.");
-      },
-      onSuccess: (response: any) => {
-        setLoading(false);
-        alert(`Payment successful! Reference: ${response.reference}\n\nItems: ${itemsText}`);
-        onSuccess();
-      },
-    });
+    const reference = `meya_${Date.now()}`;
 
-    handler.openIframe();
+    try {
+      // Call backend to initialize payment
+      const response = await fetch("/api/paystack/initialize", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          amount: total,
+          reference,
+          description: `Meya Karis Order: ${itemsText}`,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setLoading(false);
+        alert(`Error: ${data.error || "Failed to initialize payment"}`);
+        return;
+      }
+
+      // Initialize Paystack with the authorization URL
+      const handler = (window as any).PaystackPop.setup({
+        key: data.publicKey || "pk_live_8fb52479f7deb87da3914af4916b154e02584a7e",
+        email: email,
+        amount: Math.round(total * 100),
+        currency: "GHS",
+        ref: reference,
+        onClose: () => {
+          setLoading(false);
+          alert("Payment window closed.");
+        },
+        onSuccess: async (response: any) => {
+          // Verify payment with backend
+          const verifyResponse = await fetch(`/api/paystack/verify?reference=${response.reference}`);
+          const verifyData = await verifyResponse.json();
+
+          setLoading(false);
+
+          if (verifyData.verified) {
+            alert(`Payment successful! Reference: ${response.reference}\n\nItems: ${itemsText}`);
+            onSuccess();
+          } else {
+            alert("Payment verification failed. Please contact support.");
+          }
+        },
+      });
+
+      handler.openIframe();
+    } catch (error) {
+      setLoading(false);
+      console.error("Payment error:", error);
+      alert("Failed to process payment. Please try again.");
+    }
   };
 
   return (
     <div className="mt-6 rounded-xl border p-4">
-      <h3 className="font-medium mb-3">Pay with Paystack</h3>
+      <h3 className="font-medium mb-3">Payment Method</h3>
       <div className="space-y-3">
         <div>
           <label className="text-sm font-medium">Email Address</label>
@@ -144,8 +182,11 @@ function PaystackPayment({
           disabled={loading || !email}
           onClick={handlePaystackPayment}
         >
-          {loading ? "Processing..." : `Pay ¢${total.toFixed(2)} with Paystack`}
+          {loading ? "Initializing Payment..." : `Pay ¢${total.toFixed(2)} with Paystack`}
         </Button>
+        <p className="text-xs text-muted-foreground">
+          Safe and secure payment powered by Paystack
+        </p>
       </div>
     </div>
   );
