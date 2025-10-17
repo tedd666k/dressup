@@ -6,7 +6,6 @@ import { useShop, useUser } from "@/hooks/useShop";
 export default function Checkout() {
   const { state, productsMap, clearCart } = useShop();
   const { user, consumeDiscount } = useUser();
-  const { settings } = useSettings();
 
   const subtotal = useMemo(
     () =>
@@ -20,25 +19,9 @@ export default function Checkout() {
     user.registered && user.discountAvailable ? subtotal * 0.1 : 0;
   const total = Math.max(0, subtotal - discount);
 
-  const orderText = useMemo(() => {
-    const lines = state.cart
-      .map((l) => {
-        const p = productsMap.get(l.id)!;
-        return `• ${p.name} x${l.qty} — ¢${(p.price * l.qty).toFixed(2)}`;
-      })
-      .join("%0A");
-    return `New Order — Meya Karis%0A${lines}%0ASubtotal: ¢${subtotal.toFixed(2)}%0A${discount > 0 ? `Discount (first order 10%): -¢${discount.toFixed(2)}%0A` : ""}Total: ¢${total.toFixed(2)}%0A`;
-  }, [state.cart, productsMap, subtotal, discount, total]);
-
-  const waLink = buildWhatsAppOrder({
-    phone: settings.ownerPhone,
-    message: orderText + "Please confirm Mobile Money payment details.",
-  });
-
   const handlePlaceOrder = () => {
     if (discount > 0) consumeDiscount();
     clearCart();
-    if (waLink) window.open(waLink, "_blank");
   };
 
   return (
