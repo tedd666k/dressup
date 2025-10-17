@@ -47,11 +47,6 @@ export default function Checkout() {
         </div>
       </div>
       <PaystackPayment total={total} items={state.cart} productsMap={productsMap} onSuccess={handlePlaceOrder} />
-      {!settings.ownerPhone && (
-        <p className="mt-3 text-xs text-muted-foreground">
-          Set owner WhatsApp in Admin → Settings to enable WhatsApp ordering.
-        </p>
-      )}
     </div>
   );
 }
