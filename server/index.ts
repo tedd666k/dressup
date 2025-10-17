@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
+import { initializePayment, verifyPayment, getPublicKey } from "./routes/paystack";
 
 export function createServer() {
   const app = express();
@@ -18,6 +19,11 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+
+  // Paystack API routes
+  app.post("/api/paystack/initialize", initializePayment);
+  app.get("/api/paystack/verify", verifyPayment);
+  app.get("/api/paystack/public-key", getPublicKey);
 
   return app;
 }
