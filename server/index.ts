@@ -31,12 +31,12 @@ export function createServer() {
   app.get("/api/paystack/public-key", getPublicKey);
 
   // Serve static files
-  const distPath = path.join(process.cwd(), "dist/spa");
+  const distPath = path.resolve(path.dirname(import.meta.filename), "../spa");
   app.use(express.static(distPath, { index: false }));
 
   // SPA fallback - serve index.html for all non-API routes
   app.use((_req, res) => {
-    res.sendFile(path.join(distPath, "index.html"));
+    res.sendFile(path.resolve(distPath, "index.html"));
   });
 
   return app;
