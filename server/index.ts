@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import path from "path";
 import { handleDemo } from "./routes/demo";
 import {
   initializePayment,
@@ -28,6 +29,17 @@ export function createServer() {
   app.post("/api/paystack/initialize", initializePayment);
   app.get("/api/paystack/verify", verifyPayment);
   app.get("/api/paystack/public-key", getPublicKey);
+
+  // Serve static files (only in production)
+  if (process.env.NODE_ENV === "production") {
+    const distPath = path.join(process.cwd(), "dist/spa");
+    app.use(express.static(distPath, { index: false }));
+
+    // SPA fallback - serve index.html for all non-API routes
+    app.use((_req, res) => {
+      res.sendFile(path.join(distPath, "index.html"));
+    });
+  }
 
   return app;
 }
