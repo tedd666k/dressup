@@ -6,32 +6,23 @@ import express from "express";
 const app = createServer();
 const port = process.env.PORT || 3000;
 
-// Try multiple possible paths for the SPA directory
-const possiblePaths = [
-  path.join(process.cwd(), "dist/spa"),
-  path.resolve("dist/spa"),
-  "/app/dist/spa",
-  "./dist/spa",
-];
-
-let distPath = null;
-for (const p of possiblePaths) {
-  if (fs.existsSync(p)) {
-    distPath = p;
-    console.log(`✅ Found SPA directory at: ${distPath}`);
-    break;
-  }
-}
-
-if (!distPath) {
-  console.error(
-    `❌ Could not find dist/spa directory. Tried:\n${possiblePaths.join("\n")}`,
-  );
-  process.exit(1);
-}
+// Find SPA directory
+const distPath = path.join(process.cwd(), "dist/spa");
 
 // Serve static files
 app.use(express.static(distPath, { index: false }));
+
+// Serve index.html for SPA routing
+const serveIndex = (_req: any, res: any) => {
+  const indexPath = path.join(distPath, "index.html");
+  fs.readFile(indexPath, "utf-8", (err, data) => {
+    if (err) {
+      console.error("Error reading index.html:", err);
+      return res.status(500).send("Internal server error");
+    }
+    res.type("text/html").send(data);
+  });
+};
 
 // Handle React Router - serve index.html for all non-API routes
 app.get("*", (req, res) => {
@@ -40,28 +31,18 @@ app.get("*", (req, res) => {
     return res.status(404).json({ error: "Not found" });
   }
 
-  const indexPath = path.join(distPath, "index.html");
-
-  if (!fs.existsSync(indexPath)) {
-    console.error(`❌ index.html not found at: ${indexPath}`);
-    return res.status(500).json({ error: "index.html not found" });
-  }
-
-  res.sendFile(indexPath);
+  serveIndex(req, res);
 });
 
-app.listen(port, () => {
-  console.log(`✅ Server running on port ${port}`);
-  console.log(`📂 Serving SPA from: ${distPath}`);
+const server = app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+  console.log(`Serving SPA from: ${distPath}`);
 });
 
 // Graceful shutdown
 process.on("SIGTERM", () => {
-  console.log("🛑 Shutting down gracefully");
-  process.exit(0);
-});
-
-process.on("SIGINT", () => {
-  console.log("🛑 Shutting down gracefully");
-  process.exit(0);
+  console.log("Shutting down gracefully");
+  server.close(() => {
+    process.exit(0);
+  });
 });
