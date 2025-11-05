@@ -32,7 +32,8 @@ export function createServer() {
   app.get("/api/paystack/public-key", getPublicKey);
 
   // Serve static files
-  const distPath = path.resolve(path.dirname(import.meta.filename), "../spa");
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const distPath = path.resolve(__dirname, "../spa");
   app.use(express.static(distPath, { index: false }));
 
   // SPA fallback - serve index.html for all non-API routes
