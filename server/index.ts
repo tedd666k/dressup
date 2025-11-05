@@ -30,16 +30,14 @@ export function createServer() {
   app.get("/api/paystack/verify", verifyPayment);
   app.get("/api/paystack/public-key", getPublicKey);
 
-  // Serve static files (only in production)
-  if (process.env.NODE_ENV === "production") {
-    const distPath = path.join(process.cwd(), "dist/spa");
-    app.use(express.static(distPath, { index: false }));
+  // Serve static files
+  const distPath = path.join(process.cwd(), "dist/spa");
+  app.use(express.static(distPath, { index: false }));
 
-    // SPA fallback - serve index.html for all non-API routes
-    app.use((_req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
-    });
-  }
+  // SPA fallback - serve index.html for all non-API routes
+  app.use((_req, res) => {
+    res.sendFile(path.join(distPath, "index.html"));
+  });
 
   return app;
 }
