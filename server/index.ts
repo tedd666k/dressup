@@ -2,7 +2,11 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
-import { initializePayment, verifyPayment, getPublicKey } from "./routes/paystack";
+import {
+  initializePayment,
+  verifyPayment,
+  getPublicKey,
+} from "./routes/paystack";
 
 export function createServer() {
   const app = express();
