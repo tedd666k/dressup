@@ -24,7 +24,9 @@ for (const p of possiblePaths) {
 }
 
 if (!distPath) {
-  console.error(`❌ Could not find dist/spa directory. Tried:\n${possiblePaths.join("\n")}`);
+  console.error(
+    `❌ Could not find dist/spa directory. Tried:\n${possiblePaths.join("\n")}`,
+  );
   process.exit(1);
 }
 
