@@ -33,12 +33,6 @@ export default function MainMenu() {
           <Link to="/cart" className="hover:underline">
             Cart
           </Link>
-          <Link
-            to="/admin"
-            className="mt-4 text-sm text-muted-foreground hover:text-foreground"
-          >
-            Admin
-          </Link>
         </nav>
       </SheetContent>
     </Sheet>
