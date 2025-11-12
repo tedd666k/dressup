@@ -36,7 +36,12 @@ export default function Index() {
       {/* Collections (auto from Admin) */}
       <HomeCollections />
       <PromoGrid />
-      <Newsletter />
+
+      <section className="container mx-auto py-12 md:py-16">
+        <div className="flex justify-center">
+          <img src="https://cdn.builder.io/api/v1/image/assets%2F97defe09b2e246bca7c6b4af0eddc0c2%2F074fa18467d04b2187e7b564b8968ae4?format=webp&width=800" alt="Size Chart" className="w-full max-w-4xl rounded-xl" />
+        </div>
+      </section>
 
       <section id="about" className="container mx-auto py-16 md:py-24">
         <div className="max-w-2xl">
