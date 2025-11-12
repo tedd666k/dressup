@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import Gallery from "@/components/home/Gallery";
-import { GALLERY_IMAGES } from "@/lib/gallery";
 import HeroCarousel from "@/components/home/HeroCarousel";
 import PromoGrid from "@/components/home/PromoGrid";
 import Newsletter from "@/components/home/Newsletter";
