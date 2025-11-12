@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import HeroCarousel from "@/components/home/HeroCarousel";
 import PromoGrid from "@/components/home/PromoGrid";
-import Newsletter from "@/components/home/Newsletter";
 import SimpleProductGrid from "@/components/home/SimpleProductGrid";
 import HomeCollections from "@/components/home/HomeCollections";
 
