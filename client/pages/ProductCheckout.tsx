@@ -22,6 +22,8 @@ export default function ProductCheckout() {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState<string>("");
+  const [selectedColor, setSelectedColor] = useState<string>("");
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
   const [locationGranted, setLocationGranted] = useState(false);
