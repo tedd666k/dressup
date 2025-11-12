@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import Index from "./pages/Index";
 import Shop from "./pages/Shop";
+import Collections from "./pages/Collections";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import ProductCheckout from "./pages/ProductCheckout";
