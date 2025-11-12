@@ -2,11 +2,6 @@ import { Button } from "@/components/ui/button";
 
 const PROMOS = [
   {
-    title: "Lookbook 24/25",
-    subtitle: "Explore seasonal silhouettes",
-    img: "https://images.pexels.com/photos/13364874/pexels-photo-13364874.jpeg",
-  },
-  {
     title: "Bespoke Tailoring",
     subtitle: "Made-to-measure by Meya Karis",
     img: "https://images.pexels.com/photos/32100313/pexels-photo-32100313.jpeg",
