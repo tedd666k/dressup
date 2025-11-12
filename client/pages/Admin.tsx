@@ -289,11 +289,49 @@ export default function Admin() {
               ))}
             </div>
           </div>
+          <div className="mb-3">
+            <label className="text-sm font-medium">Available Colors</label>
+            <div className="flex gap-2 mb-2">
+              <Input
+                placeholder="Color name (e.g. Black, White, Navy)"
+                value={newColorInput}
+                onChange={(e) => setNewColorInput(e.target.value)}
+              />
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (!newColorInput.trim()) return;
+                  if (!newColors.includes(newColorInput.trim())) {
+                    setNewColors([...newColors, newColorInput.trim()]);
+                  }
+                  setNewColorInput("");
+                }}
+              >
+                Add
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {newColors.map((color) => (
+                <div
+                  key={color}
+                  className="flex items-center gap-2 bg-gray-100 rounded px-3 py-1"
+                >
+                  <span className="text-sm">{color}</span>
+                  <button
+                    onClick={() => setNewColors(newColors.filter((c) => c !== color))}
+                    className="text-sm font-bold hover:text-red-500"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
           <Button
             className="w-full"
             onClick={() => {
-              if (!newName || !newImage || newSizes.length === 0) {
-                alert("Please fill in all fields and select at least one size");
+              if (!newName || !newImage || newSizes.length === 0 || newColors.length === 0) {
+                alert("Please fill in all fields, select at least one size, and add at least one color");
                 return;
               }
               addProduct({
@@ -304,6 +342,7 @@ export default function Admin() {
                 image: newImage,
                 category: newCategory,
                 sizes: newSizes,
+                colors: newColors,
               });
               setNewName("");
               setNewPrice(0);
@@ -311,6 +350,8 @@ export default function Admin() {
               setNewImage("");
               setNewCategory("dresses");
               setNewSizes(["XS", "S", "M", "L", "XL"]);
+              setNewColors([]);
+              setNewColorInput("");
             }}
           >
             Add Shop Item
