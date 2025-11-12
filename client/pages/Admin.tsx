@@ -28,6 +28,8 @@ export default function Admin() {
   const [newImage, setNewImage] = useState("");
   const [newCategory, setNewCategory] = useState<"dresses" | "skirts">("dresses");
   const [newSizes, setNewSizes] = useState<string[]>(["XS", "S", "M", "L", "XL"]);
+  const [newColors, setNewColors] = useState<string[]>([]);
+  const [newColorInput, setNewColorInput] = useState("");
 
   const [colName, setColName] = useState("");
   const [colImg, setColImg] = useState("");
