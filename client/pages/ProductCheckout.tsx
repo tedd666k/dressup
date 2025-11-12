@@ -74,6 +74,14 @@ export default function ProductCheckout() {
       alert("Please enter your address");
       return;
     }
+    if (!selectedSize) {
+      alert("Please select a size");
+      return;
+    }
+    if (!selectedColor) {
+      alert("Please select a color");
+      return;
+    }
     if (!product) {
       return;
     }
@@ -89,6 +97,8 @@ export default function ProductCheckout() {
       `New Order from ${name}%0A` +
       `Address: ${encodeURIComponent(address)}%0A` +
       `Product: ${product.name} x${quantity}%0A` +
+      `Size: ${selectedSize}%0A` +
+      `Color: ${selectedColor}%0A` +
       `Price per item: ¢${product.price.toFixed(2)}%0A` +
       `Total: ¢${total.toFixed(2)}` +
       locationInfo +
