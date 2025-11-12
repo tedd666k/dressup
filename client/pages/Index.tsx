@@ -14,7 +14,7 @@ export default function Index() {
         <div className="container mx-auto pt-14 pb-10 md:pt-14 md:pb-16">
           <div className="grid gap-10 md:grid-cols-2 md:items-center">
             <div>
-              <img src="https://cdn.builder.io/api/v1/image/assets%2F97defe09b2e246bca7c6b4af0eddc0c2%2F286f3bb2c7bb4a4caca0aa5c35bfb8d5?format=webp&width=800" alt="Meya Karis" className="h-24 w-auto mb-6 bg-gray-100 rounded-lg p-3" />
+              <img src="https://cdn.builder.io/api/v1/image/assets%2F97defe09b2e246bca7c6b4af0eddc0c2%2F707963ee70e0449f8106b5aafc12833b?format=webp&width=800" alt="Meya Karis" className="w-full max-w-md mb-6" />
               <p className="mt-4 text-muted-foreground max-w-prose">
                 Contemporary couture with timeless silhouettes. A refined, minimalist presentation.
               </p>
