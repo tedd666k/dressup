@@ -18,9 +18,9 @@ export default function MainMenu() {
           <Link to="/" className="hover:underline">
             Home
           </Link>
-          <a href="#collection" className="hover:underline">
+          <Link to="/collections" className="hover:underline">
             Collection
-          </a>
+          </Link>
           <Link to="/shop" className="hover:underline">
             Shop
           </Link>
