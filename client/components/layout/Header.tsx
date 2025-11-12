@@ -13,7 +13,7 @@ export default function Header() {
         </div>
         <div className="flex items-center justify-center">
           <Link to="/" className="flex items-center gap-2">
-            <img src="https://cdn.builder.io/api/v1/image/assets%2F97defe09b2e246bca7c6b4af0eddc0c2%2F286f3bb2c7bb4a4caca0aa5c35bfb8d5?format=webp&width=800" alt="Meya Karis" className="h-16 w-auto bg-gray-100 rounded-lg p-2" />
+            <img src="https://cdn.builder.io/api/v1/image/assets%2F97defe09b2e246bca7c6b4af0eddc0c2%2F45231968b1b3404b91183b8f64e4368b?format=webp&width=800" alt="Meya Karis" className="h-16 w-auto" />
           </Link>
         </div>
         <div className="flex items-center justify-end gap-3">
