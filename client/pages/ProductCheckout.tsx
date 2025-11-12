@@ -134,12 +134,50 @@ export default function ProductCheckout() {
             alt={product.name}
             className="w-full rounded-xl mb-4"
           />
-          <div className="rounded-xl border p-4 space-y-2">
-            <p className="font-medium text-lg">{product.name}</p>
-            <p className="text-sm text-muted-foreground">
-              Price: ¢{product.price.toFixed(2)}
-            </p>
-            <div className="flex items-center gap-2 mt-4">
+          <div className="rounded-xl border p-4 space-y-4">
+            <div>
+              <p className="font-medium text-lg">{product.name}</p>
+              <p className="text-sm text-muted-foreground">
+                Price: ¢{product.price.toFixed(2)}
+              </p>
+            </div>
+            <div>
+              <label className="text-sm font-medium block mb-2">Size</label>
+              <div className="flex flex-wrap gap-2">
+                {product.sizes.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      selectedSize === size
+                        ? "bg-black text-white"
+                        : "bg-gray-100 text-foreground hover:bg-gray-200"
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium block mb-2">Color</label>
+              <div className="flex flex-wrap gap-2">
+                {product.colors.map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => setSelectedColor(color)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      selectedColor === color
+                        ? "bg-black text-white"
+                        : "bg-gray-100 text-foreground hover:bg-gray-200"
+                    }`}
+                  >
+                    {color}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
               <label className="text-sm font-medium">Quantity:</label>
               <Input
                 type="number"
