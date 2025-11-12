@@ -9,7 +9,10 @@ const KEY = "meya.shop";
 
 function normalize(state: ShopState): ShopState {
   return {
-    products: state.products,
+    products: state.products.map((p) => ({
+      ...p,
+      colors: p.colors || ["Default"],
+    })),
     cart: state.cart.filter((l) => l.qty > 0),
     collections: state.collections || [],
   };
