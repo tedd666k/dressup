@@ -248,7 +248,7 @@ export default function ProductCheckout() {
             <Button
               size="lg"
               className="w-full"
-              disabled={loading || !name || !address}
+              disabled={loading || !name || !address || !selectedSize || !selectedColor}
               onClick={handlePlaceOrder}
             >
               {loading ? "Processing..." : "Place Order via WhatsApp"}
