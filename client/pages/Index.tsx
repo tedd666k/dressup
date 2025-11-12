@@ -16,7 +16,7 @@ export default function Index() {
             <div>
               <img src="https://cdn.builder.io/api/v1/image/assets%2F97defe09b2e246bca7c6b4af0eddc0c2%2F707963ee70e0449f8106b5aafc12833b?format=webp&width=800" alt="Meya Karis" className="w-full max-w-md mb-6" />
               <p className="mt-4 text-muted-foreground max-w-prose">
-                Contemporary couture with timeless silhouettes. A refined, minimalist presentation.
+                Meya Karis celebrates the beauty of modesty through timeless luxury. Designed for the woman who embodies grace, confidence, and quiet elegance.
               </p>
               <div className="mt-6 flex gap-3">
                 <a href="#collection">
