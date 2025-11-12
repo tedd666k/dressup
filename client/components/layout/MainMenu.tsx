@@ -18,14 +18,11 @@ export default function MainMenu() {
           <Link to="/" className="hover:underline">
             Home
           </Link>
+          <a href="#collection" className="hover:underline">
+            Collection
+          </a>
           <Link to="/shop" className="hover:underline">
             Shop
-          </Link>
-          <a href="#collections" className="hover:underline">
-            Collections
-          </a>
-          <Link to="/account" className="hover:underline">
-            Account
           </Link>
           <Link to="/about" className="hover:underline">
             About
