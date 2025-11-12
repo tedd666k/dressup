@@ -180,6 +180,7 @@ export default function Admin() {
                   <p className="font-medium">{p.name}</p>
                   <p className="text-xs text-muted-foreground capitalize">{p.category}</p>
                   <p className="text-xs text-muted-foreground">Sizes: {p.sizes.join(", ")}</p>
+                  <p className="text-xs text-muted-foreground">Colors: {p.colors.join(", ")}</p>
                 </div>
                 <Button
                   variant="destructive"
