@@ -1,13 +1,11 @@
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useShop, useUser, useSettings } from "@/hooks/useShop";
-import { buildWhatsAppOrder } from "@/lib/wa";
+import { useShop, useUser } from "@/hooks/useShop";
 
 export default function Checkout() {
   const { state, productsMap, clearCart } = useShop();
   const { user, consumeDiscount } = useUser();
-  const { settings } = useSettings();
 
   const subtotal = useMemo(
     () =>
@@ -21,25 +19,9 @@ export default function Checkout() {
     user.registered && user.discountAvailable ? subtotal * 0.1 : 0;
   const total = Math.max(0, subtotal - discount);
 
-  const orderText = useMemo(() => {
-    const lines = state.cart
-      .map((l) => {
-        const p = productsMap.get(l.id)!;
-        return `• ${p.name} x${l.qty} — ¢${(p.price * l.qty).toFixed(2)}`;
-      })
-      .join("%0A");
-    return `New Order — Meya Karis%0A${lines}%0ASubtotal: ¢${subtotal.toFixed(2)}%0A${discount > 0 ? `Discount (first order 10%): -¢${discount.toFixed(2)}%0A` : ""}Total: ¢${total.toFixed(2)}%0A`;
-  }, [state.cart, productsMap, subtotal, discount, total]);
-
-  const waLink = buildWhatsAppOrder({
-    phone: settings.ownerPhone,
-    message: orderText + "Please confirm Mobile Money payment details.",
-  });
-
   const handlePlaceOrder = () => {
     if (discount > 0) consumeDiscount();
     clearCart();
-    if (waLink) window.open(waLink, "_blank");
   };
 
   return (
@@ -64,25 +46,7 @@ export default function Checkout() {
           <span>¢{total.toFixed(2)}</span>
         </div>
       </div>
-      {settings.momoProvider === "paystack" && settings.paystackKey ? (
-        <PaystackPayment total={total} items={state.cart} productsMap={productsMap} onSuccess={handlePlaceOrder} />
-      ) : settings.momoProvider === "manual" ? (
-        <ManualMomo orderText={orderText} ownerPhone={settings.ownerPhone} />
-      ) : (
-        <div className="mt-6 flex flex-col sm:flex-row gap-3">
-          <Button disabled={!waLink} onClick={handlePlaceOrder}>
-            Place Order via WhatsApp
-          </Button>
-          <Button variant="outline" disabled className="cursor-not-allowed">
-            Pay with Mobile Money (configure in admin)
-          </Button>
-        </div>
-      )}
-      {!settings.ownerPhone && (
-        <p className="mt-3 text-xs text-muted-foreground">
-          Set owner WhatsApp in Admin → Settings to enable WhatsApp ordering.
-        </p>
-      )}
+      <PaystackPayment total={total} items={state.cart} productsMap={productsMap} onSuccess={handlePlaceOrder} />
     </div>
   );
 }
@@ -99,11 +63,15 @@ function PaystackPayment({
   onSuccess: () => void;
 }) {
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
 
-  const handlePaystackPayment = () => {
+  const handlePaystackPayment = async () => {
+    if (!email.trim()) {
+      alert("Please enter your email address");
+      return;
+    }
+
     setLoading(true);
-    // Paystack expects amount in pesewas (Ghana Cedis × 100)
-    const amount = Math.round(total * 100);
 
     const itemsText = items
       .map((l) => {
@@ -112,69 +80,91 @@ function PaystackPayment({
       })
       .join(", ");
 
-    const paystackUrl = `https://checkout.paystack.com/close`;
+    const reference = `meya_${Date.now()}`;
 
-    // Note: For production, you should initialize Paystack payment through your backend
-    // This is a simplified client-side implementation
-    alert(`Paystack payment for ¢${total.toFixed(2)} for items: ${itemsText}\n\nPlease configure Paystack integration in your backend for production use.`);
-    setLoading(false);
+    try {
+      // Call backend to initialize payment
+      const response = await fetch("/api/paystack/initialize", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          amount: total,
+          reference,
+          description: `Meya Karis Order: ${itemsText}`,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setLoading(false);
+        alert(`Error: ${data.error || "Failed to initialize payment"}`);
+        return;
+      }
+
+      // Initialize Paystack with the authorization URL
+      const handler = (window as any).PaystackPop.setup({
+        key: data.publicKey || "pk_live_8fb52479f7deb87da3914af4916b154e02584a7e",
+        email: email,
+        amount: Math.round(total * 100),
+        currency: "GHS",
+        ref: reference,
+        onClose: () => {
+          setLoading(false);
+          alert("Payment window closed.");
+        },
+        onSuccess: async (response: any) => {
+          // Verify payment with backend
+          const verifyResponse = await fetch(`/api/paystack/verify?reference=${response.reference}`);
+          const verifyData = await verifyResponse.json();
+
+          setLoading(false);
+
+          if (verifyData.verified) {
+            alert(`Payment successful! Reference: ${response.reference}\n\nItems: ${itemsText}`);
+            onSuccess();
+          } else {
+            alert("Payment verification failed. Please contact support.");
+          }
+        },
+      });
+
+      handler.openIframe();
+    } catch (error) {
+      setLoading(false);
+      console.error("Payment error:", error);
+      alert("Failed to process payment. Please try again.");
+    }
   };
 
   return (
-    <div className="mt-6 flex flex-col sm:flex-row gap-3">
-      <Button
-        disabled={loading}
-        onClick={handlePaystackPayment}
-      >
-        {loading ? "Processing..." : "Pay with Paystack"}
-      </Button>
-    </div>
-  );
-}
-
-function ManualMomo({
-  orderText,
-  ownerPhone,
-}: {
-  orderText: string;
-  ownerPhone?: string;
-}) {
-  const [phone, setPhone] = useState("");
-  const [network, setNetwork] = useState("MTN");
-  const link = buildWhatsAppOrder({
-    phone: ownerPhone,
-    message: `${orderText}MoMo request — Network: ${network}, Customer MoMo: ${phone}`,
-  });
-  return (
     <div className="mt-6 rounded-xl border p-4">
-      <h3 className="font-medium mb-3">Mobile Money (Manual)</h3>
-      <div className="grid md:grid-cols-3 gap-3">
-        <Input
-          placeholder="Customer MoMo Number"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-        <select
-          className="h-10 rounded-md border bg-background px-3"
-          value={network}
-          onChange={(e) => setNetwork(e.target.value)}
-        >
-          <option>MTN</option>
-          <option>Vodafone</option>
-          <option>AirtelTigo</option>
-        </select>
+      <h3 className="font-medium mb-3">Payment Method</h3>
+      <div className="space-y-3">
+        <div>
+          <label className="text-sm font-medium">Email Address</label>
+          <Input
+            type="email"
+            placeholder="your@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={loading}
+          />
+        </div>
         <Button
-          disabled={!link}
-          onClick={() => link && window.open(link, "_blank")}
+          className="w-full"
+          disabled={loading || !email}
+          onClick={handlePaystackPayment}
         >
-          Send Payment Request via WhatsApp
+          {loading ? "Initializing Payment..." : `Pay ¢${total.toFixed(2)} with Paystack`}
         </Button>
-      </div>
-      {!ownerPhone && (
-        <p className="mt-2 text-xs text-muted-foreground">
-          Set owner WhatsApp in Admin → Settings.
+        <p className="text-xs text-muted-foreground">
+          Safe and secure payment powered by Paystack
         </p>
-      )}
+      </div>
     </div>
   );
 }

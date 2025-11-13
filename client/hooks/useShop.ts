@@ -7,6 +7,14 @@ export type Collection = { id: string; name: string; images: string[]; featured?
 export type ShopState = { products: Product[]; cart: CartLine[]; collections: Collection[] };
 const KEY = "meya.shop";
 
+function ensureProductFields(products: any[]): Product[] {
+  return products.map((p) => ({
+    ...p,
+    category: p.category || "dresses",
+    sizes: p.sizes || ["XS", "S", "M", "L", "XL"],
+  }));
+}
+
 function normalize(state: ShopState): ShopState {
   return {
     products: state.products.map((p) => ({
@@ -21,7 +29,8 @@ function normalize(state: ShopState): ShopState {
 export function useShop() {
   const [state, setState] = useState<ShopState>(() => {
     const s = storage.get(KEY, { products: DEFAULT_PRODUCTS, cart: [], collections: [] } as ShopState);
-    const products = (s.products ?? DEFAULT_PRODUCTS).slice(0, 4);
+    const rawProducts = (s.products ?? DEFAULT_PRODUCTS).slice(0, 4);
+    const products = ensureProductFields(rawProducts);
     return { products, cart: s.cart ?? [], collections: s.collections ?? [] };
   });
 
